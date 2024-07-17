@@ -19,8 +19,6 @@ mongoose
 
 app.post("/data", async (req, res) => {
   try {
-    console.log(req.body);
-    console.log("Come");
     const data = new baseModal(req.body);
     await data.save();
     const transPort = nodeMailer.createTransport({
@@ -42,16 +40,15 @@ app.post("/data", async (req, res) => {
         },
         to: "arijit1087.be22@chitkarauniversity.edu.in",
         subject: `New Contact Fill Up - `,
-        html: `Latitude: ${req.body.latitude}, Longitude: ${req.body.longitude}<br><a href="${mapsLink}" target="_blank">View on Google Maps</a>`,
+        html: `Latitude: ${req.body.lattitude}, Longitude: ${req.body.longitude}<br><a href="${mapsLink}" target="_blank">View on Google Maps</a>`,
       });
-      console.log('Email sent: ', info.response);
     };
 
     await main();
-      return res.status(201).send({
-        message: "Uploaded Successfully",
-        success: true,
-      });
+    return res.status(201).send({
+      message: "Uploaded Successfully",
+      success: true,
+    });
   } catch (error) {
     return res.status(201).send({
       message: "An error occured",
