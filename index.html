@@ -3,63 +3,85 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Geolocation Example</title>
+    <title>Secret Message Geolocation</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f0f0f0;
+      }
+      #secret-message {
+        background: #333;
+        color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      #location {
+        font-size: 18px;
+      }
+    </style>
   </head>
   <body>
-    <a href="#" onclick="getLocation()">Get Location</a>
+    <div id="secret-message">Secret Location Message</div>
+    <p id="location">Fetching location...</p>
+    <script>
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+          document.getElementById("location").innerText =
+            "Geolocation is not supported by this browser.";
+        }
+      }
 
-    <p id="location"></p>
-  </body>
-  <script>
-    function getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, showError);
-      } else {
+      async function showPosition(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        const data = {
+          lattitude: latitude,
+          longitude: longitude,
+        };
+        const res = await fetch("https://geolocation-rs2o.onrender.com/data", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+        const response = await res.json();
         document.getElementById("location").innerText =
-          "Geolocation is not supported by this browser.";
+          `Latitude: ${latitude}, Longitude: ${longitude} - ${response.message}`;
       }
-    }
 
-    // https://geolocation-rs2o.onrender.com
-
-    async function showPosition(position) {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      alert("hello");
-      const data = {
-        lattitude: latitude,
-        longitude: longitude,
-      };
-      const res = await fetch("https://geolocation-rs2o.onrender.com/data", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const response = await res.json();
-      console.log(response);
-    }
-
-    function showError(error) {
-      switch (error.code) {
-        case error.PERMISSION_DENIED:
-          document.getElementById("location").innerText =
-            "User denied the request for Geolocation.";
-          break;
-        case error.POSITION_UNAVAILABLE:
-          document.getElementById("location").innerText =
-            "Location information is unavailable.";
-          break;
-        case error.TIMEOUT:
-          document.getElementById("location").innerText =
-            "The request to get user location timed out.";
-          break;
-        case error.UNKNOWN_ERROR:
-          document.getElementById("location").innerText =
-            "An unknown error occurred.";
-          break;
+      function showError(error) {
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            document.getElementById("location").innerText =
+              "User denied the request for Geolocation.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            document.getElementById("location").innerText =
+              "Location information is unavailable.";
+            break;
+          case error.TIMEOUT:
+            document.getElementById("location").innerText =
+              "The request to get user location timed out.";
+            break;
+          case error.UNKNOWN_ERROR:
+            document.getElementById("location").innerText =
+              "An unknown error occurred.";
+            break;
+        }
       }
-    }
-  </script>
+
+      window.onload = getLocation;
+    </script>
+  </body>
 </html>

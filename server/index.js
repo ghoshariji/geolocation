@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const baseModal = require("./model/baseModal");
 const mongoose = require("mongoose");
+const cors = require("cors")
+app.use(cors())
 const dataBaseUri = "mongodb+srv://arijitghosh1203:arijit12@cluster0.vmtbkm3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 mongoose
   .connect(dataBaseUri)
