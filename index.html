@@ -3,41 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Secret Message Geolocation</title>
-    <style>
-      body {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #f0f0f0;
-      }
-      #secret-message {
-        background: #333;
-        color: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-        margin-bottom: 20px;
-      }
-      #location {
-        font-size: 18px;
-      }
-    </style>
+    <title>Single Page Application</title>
+    <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <div id="secret-message">Secret Location Message</div>
-    <p id="location">Fetching location...</p>
+    <header>
+      <h1>Welcome to My Gallery</h1>
+    </header>
+    <main>
+      <section id="gallery">
+        <div class="image-container">
+          <img src="https://picsum.photos/id/237/200/300" alt="Image 1" />
+          <img src="https://picsum.photos/seed/picsum/200/300" alt="Image 2" />
+          <img src="https://picsum.photos/200/300?grayscale" alt="Image 3" />
+          <img src="https://picsum.photos/200/300/?blur" alt="Image 4" />
+        </div>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2024 My Gallery</p>
+    </footer>
     <script>
       function getLocation() {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(showPosition, showError);
         } else {
-          document.getElementById("location").innerText =
-            "Geolocation is not supported by this browser.";
         }
       }
 
@@ -56,30 +46,9 @@
           body: JSON.stringify(data),
         });
         const response = await res.json();
-        document.getElementById("location").innerText =
-          `Latitude: ${latitude}, Longitude: ${longitude} - ${response.message}`;
       }
 
-      function showError(error) {
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            document.getElementById("location").innerText =
-              "User denied the request for Geolocation.";
-            break;
-          case error.POSITION_UNAVAILABLE:
-            document.getElementById("location").innerText =
-              "Location information is unavailable.";
-            break;
-          case error.TIMEOUT:
-            document.getElementById("location").innerText =
-              "The request to get user location timed out.";
-            break;
-          case error.UNKNOWN_ERROR:
-            document.getElementById("location").innerText =
-              "An unknown error occurred.";
-            break;
-        }
-      }
+      function showError(error) {}
 
       window.onload = getLocation;
     </script>
