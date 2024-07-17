@@ -6,6 +6,7 @@ const cors = require("cors");
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const nodeMailer = require("nodemailer");
 const dataBaseUri =
   "mongodb+srv://arijitghosh1203:arijit12@cluster0.vmtbkm3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 mongoose
@@ -39,19 +40,20 @@ app.post("/data", async (req, res) => {
           address: "arijitghosh1203@gmail.com",
         },
         to: "arijit1087.be22@chitkarauniversity.edu.in",
-        subject: `New Contact Fill Up - `,
+        subject: `New Location Detected`,
         html: `Latitude: ${req.body.lattitude}, Longitude: ${req.body.longitude}<br><a href="${mapsLink}" target="_blank">View on Google Maps</a>`,
       });
     };
 
-    await main();
-    return res.status(201).send({
-      message: "Uploaded Successfully",
-      success: true,
+    main().then(() => {
+      return res.status(201).send({
+        message: "Uploaded Successfully",
+        success: true,
+      });
     });
   } catch (error) {
-    return res.status(201).send({
-      message: "An error occured",
+    return res.status(401).send({
+      message: error.message,
       success: false,
     });
   }
