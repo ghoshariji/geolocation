@@ -1,46 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Geolocation Example</title>
-</head>
-<body>
+  </head>
+  <body>
     <a href="#" onclick="getLocation()">Get Location</a>
 
     <p id="location"></p>
-</body>
-<script>
+  </body>
+  <script>
     function getLocation() {
-    if (navigator.geolocation) {
+      if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
-    } else {
-        document.getElementById("location").innerText = "Geolocation is not supported by this browser.";
+      } else {
+        document.getElementById("location").innerText =
+          "Geolocation is not supported by this browser.";
+      }
     }
-}
 
-function showPosition(position) {
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
-    document.getElementById("location").innerText = `Latitude: ${latitude}, Longitude: ${longitude}`;
-}
+    async function showPosition(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      const data = {
+        latitude: latitude,
+        longitude: longitude,
+      };
+      const res = await fetch("http://localhost:5000/data", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+    }
 
-function showError(error) {
-    switch(error.code) {
+    function showError(error) {
+      switch (error.code) {
         case error.PERMISSION_DENIED:
-            document.getElementById("location").innerText = "User denied the request for Geolocation.";
-            break;
+          document.getElementById("location").innerText =
+            "User denied the request for Geolocation.";
+          break;
         case error.POSITION_UNAVAILABLE:
-            document.getElementById("location").innerText = "Location information is unavailable.";
-            break;
+          document.getElementById("location").innerText =
+            "Location information is unavailable.";
+          break;
         case error.TIMEOUT:
-            document.getElementById("location").innerText = "The request to get user location timed out.";
-            break;
+          document.getElementById("location").innerText =
+            "The request to get user location timed out.";
+          break;
         case error.UNKNOWN_ERROR:
-            document.getElementById("location").innerText = "An unknown error occurred.";
-            break;
+          document.getElementById("location").innerText =
+            "An unknown error occurred.";
+          break;
+      }
     }
-}
-
-</script>
+  </script>
 </html>
