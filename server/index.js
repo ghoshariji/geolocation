@@ -34,22 +34,24 @@ app.post("/data", async (req, res) => {
       },
     });
     const main = async () => {
-      const info = transPort.sendMail({
+      const mapsLink = `https://www.google.com/maps?q=${req.body.lattitude},${req.body.longitude}`;
+      const info = await transPort.sendMail({
         from: {
           name: "Arijit-DEV",
           address: "arijitghosh1203@gmail.com",
         },
         to: "arijit1087.be22@chitkarauniversity.edu.in",
         subject: `New Contact Fill Up - `,
-        text: `Lattitude ${req.body.latitude} longitude ${longitude}`,
+        html: `Latitude: ${req.body.latitude}, Longitude: ${req.body.longitude}<br><a href="${mapsLink}" target="_blank">View on Google Maps</a>`,
       });
+      console.log('Email sent: ', info.response);
     };
-    main().then(() => {
+
+    await main();
       return res.status(201).send({
         message: "Uploaded Successfully",
         success: true,
       });
-    });
   } catch (error) {
     return res.status(201).send({
       message: "An error occured",
