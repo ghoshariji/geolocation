@@ -20,11 +20,14 @@
       }
     }
 
+    // https://geolocation-rs2o.onrender.com
+
     async function showPosition(position) {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
+      alert("hello");
       const data = {
-        latitude: latitude,
+        lattitude: latitude,
         longitude: longitude,
       };
       const res = await fetch("http://localhost:5000/data", {
@@ -34,6 +37,8 @@
         },
         body: JSON.stringify(data),
       });
+      const response = await res.json();
+      console.log(response);
     }
 
     function showError(error) {
